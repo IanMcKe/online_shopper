@@ -40,7 +40,15 @@
             </li>
           </ul>
           <hr/>
-          <h4>Your total is: ${{addTotal()}}</h4>
+          <span class="form-group">
+            <form class="form-inline" role="form" ng-submit="shipping = calculateShippingCost(zip)">
+              <input type="number" class="form-control input-sm" ng-model="zip" placeholder="Zip Code">
+              <button type="sumbit" class="btn btn-warning btn-sm">Calculate Shipping</button>
+            </form>
+          </span>
+          <h4>Item Total: {{addTotalMinusShipping() | currency: $: 2}}</h4>
+          <h4 ng-show="shipping > 0">Shipping Cost: {{shipping | currency: $: 2}}</h4>
+          <h4 ng-show="shipping > 0">Total Cost: {{addTotalMinusShipping() + shipping | currency: $: 2}}</h4>
         </div>
       </div>
       <div class="row">

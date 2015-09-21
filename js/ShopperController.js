@@ -12,12 +12,18 @@ onlineShopper.controller('ShopperController', function ShopperController($scope)
   };
 
   $scope.cart = [];
-  $scope.shippingCost = 0;
   //using $scope.totalCost = 0 instead of var total = 0 causes a bug for some reason
     //$scope.totalCost = 0
   $scope.addToCart = function(item) {
-    for(var i = 0; i < $scope.cart.length)
-    $scope.cart.push(item);
+    var dupeCheck = false;
+    for(var i = 0; i < $scope.cart.length; i++) {
+      if(item.name == $scope.cart[i].name) {
+        dupeCheck = true;
+      }
+    }
+    if(dupeCheck != true) {
+      $scope.cart.push(item);
+    }
   };
 
   $scope.deleteFromCart = function(item) {
@@ -25,13 +31,32 @@ onlineShopper.controller('ShopperController', function ShopperController($scope)
     $scope.cart.splice(index, 1);
   };
 
+  $scope.calculateShippingCost = function(zip) {
+    var shippingCost = 0;
+    var dist = Math.abs(97201 - parseInt(zip));
+    if(dist >= 50000) {
+      shippingCost = 15;
+    } else if (dist >= 30000) {
+      shippingCost = 10;
+    } else if (dist >= 10000) {
+      shippingCost = 5;
+    } else {
+      shippingCost = 2;
+    }
+    return shippingCost;
+  }
+
   // $scope.shippingCost
-  $scope.addTotal = function() {
-    var total = 0;
+  $scope.addTotalMinusShipping = function() {
+    var total = 0.0;
     for(var i = 0; i < $scope.cart.length; i++) {
       total += $scope.cart[i].price;
     }
-    total += $scope.shippingCost;
+
+    if(total >= 25) {
+      total *= .9;
+    }
+
     return total;
   };
 });
